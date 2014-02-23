@@ -1,0 +1,9 @@
+{
+	"foo"		: "bar",
+	"baz"		: "bleem",
+	price		: $1.323GBP,
+	boof 		: off,
+	zoom		: [1,2,3, Foo(a: 1, b: 2)],
+	startedAt	: 2014-11-10,
+	nested		: { a: 1, b: 2, c: "this \"is a\nstrin'g", d: off }
+}

@@ -1,0 +1,191 @@
+{
+	var objectConstructors = options.constructors || {};
+
+	function createObject(type, properties) {
+		if (type in objectConstructors) {
+			return objectConstructors[type](properties);
+		} else {
+			throw new Error("Unknown object type: " + type);
+		}
+	}
+}
+
+Start
+	= _ top:TopLevel {
+		return top;
+	}
+
+TopLevel
+	= Array
+	/ Dictionary
+	/ Object
+
+Value
+	= Array
+	/ Dictionary
+	/ Object
+	/ Atom
+
+Atom
+	= DateLike
+	/ Money
+	/ Float
+	/ Integer
+	/ String
+	/ Boolean
+	/ Null
+
+/* Helpers */
+_
+	= [ \t\r\n]*
+
+non_zero_digit
+    = [1-9]
+
+digit
+    = [0-9]
+
+float
+    = $ ( digit+ '.' digit+ )
+
+integer
+    = $ ( non_zero_digit digit* )
+
+ident
+	= $ ( [a-zA-Z_] [a-zA-Z9-9_]* )
+
+/* Productions */
+
+Array
+	= '[' _ l:List? ']' _ {
+		return l || [];
+	}
+
+List
+	= head:Value _ tail:(',' _ Value _)* {
+		var list = [head];
+		for (var i = 0; i < tail.length; ++i) {
+			list.push(tail[i][2]);
+		}
+		return list;
+	}
+
+Dictionary
+	= '{' _ p:Pairs? '}' _ {
+		return p || {};
+	}
+
+Object
+	= type:ident '(' _ props:(Pairs?) ')' _ {
+		return createObject(type, props || {});
+	}
+
+Pairs
+	= head:Pair tail:(',' _ Pair)* {
+		var obj = {};
+		obj[head[0]] = head[1];
+		for (var i = 0; i < tail.length; ++i) {
+			obj[tail[i][2][0]] = tail[i][2][1];
+		}
+		return obj;
+	}
+
+Pair
+	= k:Key _ ':' _ v:Value _ {
+		return [k, v];
+	}
+
+Key
+	= ident
+	/ String
+
+DateLike
+	= DateWithTime
+	/ d:Date {
+		return new Date(d[0], d[1], d[2])
+	}
+
+DateWithTime
+	= d:Date 'T' t:Time {
+		return new Date(d[0], d[1], d[2], t[0], t[1], t[2]);
+	}
+
+Date
+	= year:(digit digit digit digit) '-' month:(digit digit) '-' day:(digit digit) {
+		return [
+			parseInt(year.join(''), 10),
+			parseInt(month.join(''), 10) - 1,
+			parseInt(day.join(''), 10)
+		]
+	}
+
+Time
+	= hour:(digit digit) ':' minute:(digit digit) seconds:Seconds? {
+		seconds = seconds || [0,0];
+		return [
+			parseInt(hour.join(''), 10),
+			parseInt(minute.join(''), 10),
+			seconds[0],
+			seconds[1]
+		]
+	}
+
+Seconds
+	= ':' h:digit t:digit m:Milliseconds? {
+		return [
+			parseInt(h + t, 10),
+			m || 0
+		];
+	}
+
+Milliseconds
+	= '.' d1:digit d2:digit d3:digit {
+		return parseInt(d1 + d2 + d3, 10);
+	}
+
+Money
+	= '$' major:digit+ minor:('.' digit+)? currency:Currency? {
+		return createObject('money', {
+			major 		: parseInt(major.join(''), 10),
+			minor 		: minor ? parseInt(minor[1].join('')) : 0,
+			currency 	: currency || null
+		});
+	}
+
+Currency
+	= $ [A-Za-z]+
+
+Integer
+	= i:integer { return parseInt(i, 10); }
+
+Float
+	= f:float { return parseFloat(f); }
+
+String
+	= '"' str:( DChar* ) '"' { return str.join(''); }
+	/ "'" str:( SChar* ) "'" { return str.join(''); }
+
+DChar
+	= Escape / [^"\\]
+
+SChar
+	= Escape / [^'\\]
+
+Escape
+	= '\\n'		{ return "\n"; }
+	/ '\\r'		{ return "\r"; }
+	/ '\\t'		{ return "\t"; }
+	/ '\\\\'	{ return "\\"; }
+	/ '\\\''	{ return "'"; }
+	/ '\\"'		{ return '"'; }
+
+Boolean
+	= 'true'	{ return true; }
+	/ 'on' 		{ return true; }
+	/ 'yes' 	{ return true; }
+	/ 'false' 	{ return false; }
+	/ 'off' 	{ return false; }
+	/ 'no' 		{ return false; }
+
+Null
+	= 'null'	{ return null; }
