@@ -5,5 +5,6 @@
 	boof 		: off,
 	zoom		: [1,2,3, Foo(a: 1, b: 2)],
 	startedAt	: 2014-11-10,
-	nested		: { a: 1, b: 2, c: "this \"is a\nstrin'g", d: off }
+	nested		: { a: 1, b: 2, c: "this \"is a\nstrin'g", d: off },
+	pos 		: <1.2,1.4,1.8>
 }

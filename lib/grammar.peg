@@ -24,6 +24,7 @@ Value
 	= Array
 	/ Dictionary
 	/ Object
+	/ Vector
 	/ Atom
 
 Atom
@@ -186,6 +187,19 @@ Boolean
 	/ 'false' 	{ return false; }
 	/ 'off' 	{ return false; }
 	/ 'no' 		{ return false; }
+
+Vector
+	= '<' _ x:Number _ ',' _ y:Number _ z:(',' _ z:Number _)? '>' {
+		if (z) {
+			return createObject('vec3', {x: x, y: y, z: z[2]});
+		} else {
+			return createObject('vec2', {x: x, y: y});
+		}
+	}
+
+Number
+	= Float
+	/ Integer
 
 Null
 	= 'null'	{ return null; }
