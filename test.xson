@@ -1,10 +1,18 @@
 {
 	"foo"		: "bar",
 	"baz"		: "bleem",
+	"number"	: 100_000_000,
 	price		: $1.323GBP,
 	boof 		: off,
+	float 		: 1.231_333,
 	zoom		: [1,2,3, Foo(a: 1, b: 2)],
 	startedAt	: 2014-11-10,
 	nested		: { a: 1, b: 2, c: "this \"is a\nstrin'g", d: off },
-	pos 		: <1.2,1.4,1.8>
+	pos 		: <1.2,1.4,1.8>,
+	bits 		: 0b1100_1001,
+	hex			: 0xFF_1D,
+	person  	: Person(
+		name: "Jason",
+		age: 33
+	)
 }

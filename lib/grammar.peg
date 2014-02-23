@@ -30,8 +30,7 @@ Value
 Atom
 	= DateLike
 	/ Money
-	/ Float
-	/ Integer
+	/ Number
 	/ String
 	/ Boolean
 	/ Null
@@ -40,17 +39,8 @@ Atom
 _
 	= [ \t\r\n]*
 
-non_zero_digit
-    = [1-9]
-
 digit
     = [0-9]
-
-float
-    = $ ( digit+ '.' digit+ )
-
-integer
-    = $ ( non_zero_digit digit* )
 
 ident
 	= $ ( [a-zA-Z_] [a-zA-Z9-9_]* )
@@ -156,11 +146,37 @@ Money
 Currency
 	= $ [A-Za-z]+
 
-Integer
-	= i:integer { return parseInt(i, 10); }
+Number
+	= Float
+	/ Hex
+	/ Binary
+	/ Integer
 
 Float
-	= f:float { return parseFloat(f); }
+	= rhead:[0-9] rtail:([0-9_]*) '.' fhead:[0-9] ftail:([0-9_]*) {
+		return parseFloat((
+			rhead +
+			rtail.join('') +
+			'.' +
+			fhead +
+			ftail.join('')
+		).replace(/_/g, ''));
+	}
+
+Integer
+	= head:[1-9] tail:([0-9_]*) {
+		return parseInt(head + tail.join('').replace(/_/g, ''), 10);
+	}
+
+Hex
+	= '0x' digits:([0-9a-fA-F_]+) {
+		return parseInt(digits.join('').replace(/_/g, ''), 16);
+	}
+
+Binary
+	= '0b' digits:([01_]+) {
+		return parseInt(digits.join('').replace(/_/g, ''), 2);
+	}
 
 String
 	= '"' str:( DChar* ) '"' { return str.join(''); }
@@ -196,10 +212,6 @@ Vector
 			return createObject('vec2', {x: x, y: y});
 		}
 	}
-
-Number
-	= Float
-	/ Integer
 
 Null
 	= 'null'	{ return null; }
