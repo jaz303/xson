@@ -1,7 +1,20 @@
-var parser  = require('./lib/parser'),
-    builtin = require('./lib/builtin');
+var parser      = require('./lib/parser'),
+    builtin     = require('./lib/builtin'),
+    serialize   = require('./lib/serializer');
 
 function identity(x) { return x; }
+
+function builtinToStructure(thing) {
+    if (thing instanceof builtin.Money) {
+        return ['money', thing.major, thing.minor, thing.currency];
+    } else if (thing instanceof builtin.Vec2) {
+        return ['vec2', thing.x, thing.y];
+    } else if (thing instanceof builtin.Vec3) {
+        return ['vec3', thing.x, thing.y, thing.z];
+    } else {
+        return null;
+    }
+}
 
 module.exports = {
     parse: function(source, options) {
@@ -30,5 +43,19 @@ module.exports = {
         return parser.parse(source, {
             constructors    : ctors
         });
-    }
+    },
+
+    stringify: function(object, options) {
+        options = options || {};
+
+        var toStructure = options.toStructure || builtinToStructure;
+
+        return serialize(object, {
+            toStructure     : toStructure
+        });
+    },
+
+    Money   : builtin.Money,
+    Vec2    : builtin.Vec2,
+    Vec3    : builtin.Vec3
 };
