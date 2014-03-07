@@ -1,5 +1,33 @@
 # xson
 
+## Installation
+
+  $ npm install xson
+
+## API
+
+### Require
+
+  var xson = require('xson');
+
+### `xson.parse(string [, options])`
+
+Parse an XSON string and return the result. Valid `options` keys:
+
+  * `constructors`: a map of object type names to their constructor functions. Whenever the XSON parser encounters a named object (or indeed a vector or money), the corresponding constructor will be called receiving the object's properties as a parameter. For example, to handle the following XSON:
+
+    Person(name: "Jason")
+
+  one would call `parse` in the following manner:
+
+    xson.parse('Person(name: "Jason")', {
+    	constructors: {
+    		Person: function(props) {
+    			return new Person(props.name);
+    		}
+    	}
+	});
+
 ## Syntax
 
 ### Atomic Types
