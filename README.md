@@ -4,11 +4,11 @@
 
     $ npm install xson
 
+## Require
+
+	var xson = require('xson');
+
 ## API
-
-### Require
-
-    var xson = require('xson');
 
 ### `xson.parse(string [, options])`
 
@@ -26,11 +26,13 @@ Parse an XSON string and return the result. Valid `options` keys:
     xson.parse('Person(name: "Jason")', {
     	constructors: {
     		Person: function(props) {
-    			return new Person(props.name);
+    			return new PersonModel(props.name);
     		}
     	}
 	});
 	```
+
+	Note that despite the name "constructors", such functions are invoked by regular function calls, i.e. `Person(props)` and not `new Person(props)`.
 
 ## Syntax
 
