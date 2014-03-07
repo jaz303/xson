@@ -6,7 +6,7 @@
 
 #### Boolean
 
-In addition to standar JSON syntax, `on`, `off`, `yes` and `no` are acceptable:
+In addition to standard JSON syntax, `on`, `off`, `yes` and `no` are acceptable:
 
 ```
 true
@@ -21,10 +21,12 @@ no
 
 Date are expressed in ISO-8601. When time is also present seconds and milliseconds may be omitted for convience's sake. When so omitted, they default to zero.
 
+```
 2014-03-07
 2014-03-07T23:02
 2014-03-07T23:02:28
 2014-03-07T23:02:28.123
+```
 
 #### Number
 
@@ -102,7 +104,6 @@ XSON supports 2- and 3- component numeric vectors:
 <1,2>
 <2.3,6.7,0>
 ```
-
 
 ## TODO
 
