@@ -153,19 +153,13 @@ Number
 	/ Integer
 
 Float
-	= rhead:[0-9] rtail:([0-9_]*) '.' fhead:[0-9] ftail:([0-9_]*) {
-		return parseFloat((
-			rhead +
-			rtail.join('') +
-			'.' +
-			fhead +
-			ftail.join('')
-		).replace(/_/g, ''));
+	= text:$('-'? [0-9] [0-9_]* '.' [0-9] [0-9_]*) {
+		return parseFloat(text.replace(/_/g, ''));
 	}
 
 Integer
-	= head:[1-9] tail:([0-9_]*) {
-		return parseInt(head + tail.join('').replace(/_/g, ''), 10);
+	= text:$('-'? [1-9] [0-9_]*) {
+		return parseInt(text.replace(/_/g, ''), 10);
 	}
 
 Hex
