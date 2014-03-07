@@ -34,6 +34,19 @@ Parse an XSON string and return the result. Valid `options` keys:
 
 	Note that despite the name "constructors", such functions are invoked by regular function calls, i.e. `Person(props)` and not `new Person(props)`.
 
+### `xson.stringify(object, [, options])`
+
+Convert an object structure to an XSON string and return it. Valid `options` keys:
+
+  * `toStructure`: a function that is called whenever the serializer encounters a Javascript object type (excluding `null` and arrays) to determine how it should be encoded. Returns one of the following:
+
+    * for money: `['money', major, minor, currency]`. Major/minor should be integers and currency is an optional string.
+    * for vectors: `['vec2', x, y]` or `['vec3', x, y, z]`.
+    * for named objects: `['ConstructorName', properties]`.
+    * for all other objects, return `null`. XSON will then serialize the object as a dictionary (i.e. standard JSON object).
+
+  The default implementation of `toStructure` will detect XSON's built-in `Money`, `Vec2` and `Vec3` types and encode them accordingly. All other objects will be encoded as XSON dictionaries.
+
 ## Syntax
 
 ### Atomic Types
