@@ -1,6 +1,6 @@
 {
   "name": "xson",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "eXtended Serialized Object Notation",
   "main": "index.js",
   "scripts": {
