@@ -3,8 +3,9 @@
 	"baz"		: "bleem",
 	"number"	: 100_000_000,
 	price		: $1.323GBP,
+	// here's a comment
 	boof 		: off,
-	float 		: 1.231_333,
+	float 		: 1.231_333, // and another comment
 	zoom		: [1,2,3, Foo(a: 1, b: 2)],
 	startedAt	: 2014-11-10,
 	nested		: { a: 1, b: 2, c: "this \"is a\nstrin'g", d: off },

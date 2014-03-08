@@ -37,7 +37,22 @@ Atom
 
 /* Helpers */
 _
-	= [ \t\r\n]*
+	= skippable*
+
+skippable
+	= ws
+	/ comment
+
+ws
+	= [ \t\r\n]
+
+comment
+	= '//' [^\r\n]* nl
+
+nl
+	= '\r\n'
+	/ '\r'
+	/ '\n'
 
 digit
     = [0-9]
